@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confluence AI Assistant - Documentation</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.6; 
+            background-color: #f8f9fa;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            padding: 40px 0; 
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 { margin: 0; font-size: 2.5em; font-weight: 300; }
+        h2 { 
+            color: #2c3e50; 
+            border-bottom: 3px solid #3498db; 
+            padding-bottom: 10px; 
+            margin-top: 40px;
+        }
+        h3 { color: #34495e; margin-top: 30px; }
+        h4 { color: #7f8c8d; }
+        
+        .content { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .code { 
+            background-color: #f8f9fa; 
+            padding: 20px; 
+            border-left: 4px solid #3498db; 
+            margin: 15px 0; 
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .endpoint { 
+            background-color: #e8f5e8; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 15px 0; 
+            border-left: 4px solid #28a745;
+        }
+        .warning { 
+            background-color: #fff3cd; 
+            padding: 15px; 
+            border-left: 4px solid #ffc107; 
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .info { 
+            background-color: #d1ecf1; 
+            padding: 15px; 
+            border-left: 4px solid #17a2b8; 
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .success { 
+            background-color: #d4edda; 
+            padding: 15px; 
+            border-left: 4px solid #28a745; 
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        ul { margin-left: 20px; }
+        li { margin-bottom: 8px; }
+        
+        .nav { 
+            background-color: #343a40; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 30px; 
+            text-align: center;
+        }
+        .nav a { 
+            margin: 0 15px; 
+            text-decoration: none; 
+            color: #17a2b8; 
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .nav a:hover { background-color: rgba(23, 162, 184, 0.1); }
+        
+        .architecture-diagram {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: monospace;
+            line-height: 1.8;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .metric-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #3498db;
+        }
+        
+        .metric-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+        }
+        
+        .back-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+        }
+        .back-link:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>🤖 Confluence AI Assistant</h1>
+            <p>Technical Documentation & Architecture Guide</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content">
+            <div class="nav">
+                <strong style="color: white;">Quick Navigation:</strong><br><br>
+                <a href="#overview">Overview</a>
+                <a href="#architecture">Architecture</a>
+                <a href="#components">Components</a>
+                <a href="#api">API Endpoints</a>
+                <a href="#deployment">Deployment</a>
+                <a href="#troubleshooting">Troubleshooting</a>
+                <a href="#metrics">Metrics</a>
+            </div>
+
+            <h2 id="overview">📋 Application Overview</h2>
+            <p>This is an AI-powered assistant that enables semantic search and question-answering over Confluence documentation. 
+            It combines vector search capabilities with Large Language Model (LLM) responses to provide intelligent answers 
+            based on your organization's Confluence content.</p>
+            
+            <div class="success">
+                <strong>🎯 Key Features:</strong>
+                <ul>
+                    <li>🔍 <strong>Semantic Search</strong>: Vector-based search using sentence transformers (all-MiniLM-L6-v2)</li>
+                    <li>🤖 <strong>AI Responses</strong>: LLM-powered answers via Ollama (llama3.2:1b)</li>
+                    <li>📚 <strong>Confluence Integration</strong>: Direct API integration with Bearer token authentication</li>
+                    <li>💾 <strong>Persistent Storage</strong>: External ChromaDB StatefulSet for vector embeddings</li>
+                    <li>☸️ <strong>Cloud Native</strong>: Kubernetes deployment with proper health checks and service mesh</li>
+                    <li>🔒 <strong>Enterprise Ready</strong>: Corporate SSL/CA support, authentication, monitoring</li>
+                </ul>
+            </div>
+
+            <h2 id="architecture">🏗️ System Architecture</h2>
+            
+            <h3>Data Flow Pipeline</h3>
+            <div class="code">
+1. <strong>Data Ingestion</strong>: Confluence API → Space Filtering → Page Extraction → Content Cleaning
+2. <strong>Text Processing</strong>: HTML Removal → Text Chunking → Content Validation
+3. <strong>Embedding Generation</strong>: Text Chunks → Sentence Transformers → 384D Vector Embeddings
+4. <strong>Vector Storage</strong>: Embeddings + Metadata → ChromaDB (External HTTP Service)
+5. <strong>Query Processing</strong>: User Question → Vector Embedding → Similarity Search
+6. <strong>Context Retrieval</strong>: Top-K Similar Chunks → Context Assembly → Length Optimization
+7. <strong>AI Response</strong>: Context + Question → Ollama LLM → Generated Answer → Web Interface
+            </div>
+
+            <h3>Component Architecture</h3>
+            <div class="architecture-diagram">
+                <div class="code">
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                           Kubernetes Cluster                                    │
+│                                                                                 │
+│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐            │
+│  │   Flask App     │    │   ChromaDB      │    │   Ollama LLM    │            │
+│  │  (Deployment)   │◄──►│  (StatefulSet)  │    │  (Deployment)   │            │
+│  │                 │    │  Persistent Vol │    │  Model: llama3.2│            │
+│  │ - Web Interface │    │  Vector Storage │    │  Init Container │            │
+│  │ - API Endpoints │    │  HTTP Client    │    │  Model Download │            │
+│  │ - Health Checks │    │  Port: 8000     │    │  Port: 11434    │            │
+│  └─────────┬───────┘    └─────────────────┘    └─────────────────┘            │
+│            │                                                                   │
+│            │              ┌─────────────────┐                                 │
+│            │              │    Services     │                                 │
+│            │              │ - cnfl-scrap    │                                 │
+│            │              │ - chromadb      │                                 │
+│            │              │ - ollama        │                                 │
+│            │              └─────────────────┘                                 │
+└─────────────┼───────────────────────────────────────────────────────────────────┘
+              │
+              ▼
+    ┌─────────────────┐
+    │  Confluence API │
+    │ (External SaaS) │
+    │ Bearer Token    │
+    │ Space: IS       │
+    └─────────────────┘
+                </div>
+            </div>
+
+            <h2 id="components">🧩 Technical Components</h2>
+            
+            <h3>1. Flask Web Application (Main Orchestrator)</h3>
+            <div class="info">
+                <ul>
+                    <li><strong>Framework</strong>: Flask 3.0.0 with Werkzeug WSGI</li>
+                    <li><strong>Purpose</strong>: Web interface, API orchestration, service coordination</li>
+                    <li><strong>Key Features</strong>: 
+                        <ul>
+                            <li>Lazy data loading (prevents startup blocking)</li>
+                            <li>Comprehensive health checks and monitoring</li>
+                            <li>Debug endpoints for troubleshooting</li>
+                            <li>Corporate SSL/CA certificate support</li>
+                            <li>Service discovery and dependency management</li>
+                        </ul>
+                    </li>
+                    <li><strong>Resource Limits</strong>: 2 CPU, 4GB RAM (configurable)</li>
+                </ul>
+            </div>
+
+            <h3>2. Vector Database (ChromaDB)</h3>
+            <div class="info">
+                <ul>
+                    <li><strong>Version</strong>: ChromaDB 0.4.24</li>
+                    <li><strong>Deployment</strong>: Kubernetes StatefulSet with persistent volumes</li>
+                    <li><strong>Configuration</strong>: HTTP server mode, CORS enabled for cross-service communication</li>
+                    <li><strong>Storage</strong>: Persistent volume claims for data durability</li>
+                    <li><strong>Performance</strong>: Optimized for similarity search with L2 distance</li>
+                    <li><strong>Current Data</strong>: {{ chromadb_chunks }} embedded document chunks</li>
+                </ul>
+            </div>
+
+            <h3>3. Embedding Model (Sentence Transformers)</h3>
+            <div class="info">
+                <ul>
+                    <li><strong>Model</strong>: sentence-transformers/all-MiniLM-L6-v2</li>
+                    <li><strong>Vector Dimensions</strong>: 384 dimensions per embedding</li>
+                    <li><strong>Optimization</strong>: Balanced for speed and semantic accuracy</li>
+                    <li><strong>Use Cases</strong>: Document chunking, query embedding, similarity search</li>
+                    <li><strong>Performance</strong>: ~100ms per document chunk on CPU</li>
+                </ul>
+            </div>
+
+            <h3>4. Language Model (Ollama)</h3>
+            <div class="info">
+                <ul>
+                    <li><strong>Model</strong>: Ollama llama3.2:1b (1 billion parameters)</li>
+                    <li><strong>Deployment</strong>: Kubernetes deployment with init container for model download</li>
+                    <li><strong>Configuration</strong>: Temperature=0.1, Max tokens=150, Top-p=0.9</li>
+                    <li><strong>Resource Requirements</strong>: 6 CPU, 12GB RAM (4GB minimum)</li>
+                    <li><strong>Response Time</strong>: ~5-15 seconds per query (model size dependent)</li>
+                </ul>
+            </div>
+
+            <h2 id="api">🌐 API Endpoints Documentation</h2>
+            
+            <div class="endpoint">
+                <strong>GET/POST /</strong><br>
+                <em>Main application interface and query processing</em><br>
+                <strong>GET</strong>: Returns the search form HTML interface<br>
+                <strong>POST</strong>: Processes user questions and returns AI-generated responses<br>
+                <strong>Parameters</strong>: <code>question</code> (form data)<br>
+                <strong>Response</strong>: HTML page with answer or error message
+            </div>
+
+            <div class="endpoint">
+                <strong>GET /health</strong><br>
+                <em>Kubernetes health check endpoint</em><br>
+                <strong>Purpose</strong>: Liveness and readiness probe endpoint<br>
+                <strong>Response</strong>: <code>{"status": "healthy"}</code><br>
+                <strong>Timeout</strong>: Fast response, no heavy operations
+            </div>
+
+            <div class="endpoint">
+                <strong>GET /debug-chromadb</strong><br>
+                <em>ChromaDB connection and data diagnostics</em><br>
+                <strong>Purpose</strong>: Troubleshoot vector database issues<br>
+                <strong>Returns</strong>: Client type, connection status, collection info, chunk counts
+            </div>
+
+            <div class="endpoint">
+                <strong>GET /debug-confluence</strong><br>
+                <em>Confluence API connectivity and authentication test</em><br>
+                <strong>Purpose</strong>: Validate external API integration<br>
+                <strong>Returns</strong>: Auth status, space information, sample page data
+            </div>
+
+            <div class="endpoint">
+                <strong>POST /refresh</strong><br>
+                <em>Manual data refresh and re-ingestion trigger</em><br>
+                <strong>Purpose</strong>: Update embeddings with latest Confluence content<br>
+                <strong>Process</strong>: Clears existing data, re-fetches pages, regenerates embeddings<br>
+                <strong>Warning</strong>: Heavy operation, may take several minutes
+            </div>
+
+            <div class="endpoint">
+                <strong>GET /spaces</strong><br>
+                <em>List all accessible Confluence spaces</em><br>
+                <strong>Purpose</strong>: Discover available content sources<br>
+                <strong>Returns</strong>: Space metadata, keys, descriptions, permissions
+            </div>
+
+            <div class="endpoint">
+                <strong>GET /docs</strong><br>
+                <em>This comprehensive documentation page</em><br>
+                <strong>Purpose</strong>: Self-documenting application architecture and usage<br>
+                <strong>Content</strong>: Technical specs, troubleshooting, deployment guides
+            </div>
+
+            <h2 id="deployment">☸️ Deployment Configuration</h2>
+            
+            <h3>Environment Variables</h3>
+            <div class="code">
+# Confluence API Configuration
+CONFLUENCE_BASE_URL=https://your-instance.atlassian.net
+CONFLUENCE_API_TOKEN=your_bearer_token_here
+CONFLUENCE_SPACE_KEY=IS  # Target space key
+
+# SSL and Security Configuration  
+VERIFY_SSL=false  # Set to true for production with valid certificates
+CA_SSL=your_corporate_ca_certificate
+
+# Service Discovery (Kubernetes Internal)
+OLLAMA_HOST=ollama-service:11434
+CHROMADB_HOST=chromadb-service:8000
+
+# Model and Cache Configuration
+HF_HOME=/app/.cache/huggingface
+SENTENCE_TRANSFORMERS_HOME=/app/.cache/sentence_transformers
+            </div>
+
+            <h3>Kubernetes Resource Specifications</h3>
+            <div class="info">
+                <strong>Flask Application:</strong>
+                <ul>
+                    <li>Deployment with 1 replica (horizontally scalable)</li>
+                    <li>Init containers for service dependency waiting</li>
+                    <li>Resource limits: 2 CPU, 4GB RAM</li>
+                    <li>Health checks: Readiness (120s delay), Liveness (180s delay)</li>
+                    <li>Secret mounts for API tokens and certificates</li>
+                </ul>
+            </div>
+
+            <div class="info">
+                <strong>ChromaDB StatefulSet:</strong>
+                <ul>
+                    <li>StatefulSet for stable network identity and storage</li>
+                    <li>Persistent Volume Claim for data durability</li>
+                    <li>Resource limits: 1 CPU, 2GB RAM</li>
+                    <li>HTTP server mode with CORS configuration</li>
+                    <li>TCP health probes on port 8000</li>
+                </ul>
+            </div>
+
+            <div class="info">
+                <strong>Ollama LLM Service:</strong>
+                <ul>
+                    <li>Deployment with model download init container</li>
+                    <li>Resource limits: 6 CPU, 12GB RAM (GPU optional)</li>
+                    <li>Persistent storage for downloaded models</li>
+                    <li>Network timeout: 300 seconds for large responses</li>
+                </ul>
+            </div>
+
+            <h2 id="troubleshooting">🔧 Troubleshooting Guide</h2>
+            
+            <div class="warning">
+                <strong>⚠️ Common Issues and Solutions:</strong>
+                <ul>
+                    <li><strong>Pod Restart Loops</strong>: 
+                        <ul>
+                            <li>Check if data ingestion is blocking startup (fixed with lazy loading)</li>
+                            <li>Verify health check endpoints are responding</li>
+                            <li>Check resource limits and memory usage</li>
+                        </ul>
+                    </li>
+                    <li><strong>Empty Search Results</strong>: 
+                        <ul>
+                            <li>Verify ChromaDB contains data via <code>/debug-chromadb</code></li>
+                            <li>Check Confluence API connectivity via <code>/debug-confluence</code></li>
+                            <li>Trigger manual refresh via <code>/refresh</code></li>
+                        </ul>
+                    </li>
+                    <li><strong>Slow Response Times</strong>: 
+                        <ul>
+                            <li>Consider reducing context length or search results</li>
+                            <li>Check Ollama model size and resource allocation</li>
+                            <li>Monitor network latency between services</li>
+                        </ul>
+                    </li>
+                    <li><strong>Service Connection Errors</strong>: 
+                        <ul>
+                            <li>Verify Kubernetes service discovery</li>
+                            <li>Check network policies and firewall rules</li>
+                            <li>Validate init container service waiting logic</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <h3>Debug Commands</h3>
+            <div class="code">
+# Pod and Service Status
+kubectl get pods -l app=cnfl-scrap-flask
+kubectl get svc cnfl-scrap-service
+kubectl get statefulset chromadb
+
+# Application Logs
+kubectl logs -f deployment/ollama-flask
+kubectl logs -f statefulset/chromadb
+kubectl logs -f deployment/ollama
+
+# Health and Debug Endpoints
+curl http://cnfl-scrap-service/health
+curl http://cnfl-scrap-service/debug-chromadb
+curl http://cnfl-scrap-service/debug-confluence
+
+# Resource Usage
+kubectl top pods
+kubectl describe pod <pod-name>
+            </div>
+
+            <h2 id="metrics">📊 Performance Metrics & Statistics</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-number">{{ total_pages }}</span>
+                    <div>Confluence Pages Processed</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">{{ chromadb_chunks }}</span>
+                    <div>Vector Embeddings Stored</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">384</span>
+                    <div>Vector Dimensions</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">2</span>
+                    <div>Search Results per Query</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">1500</span>
+                    <div>Max Context Characters</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">150</span>
+                    <div>Max Response Tokens</div>
+                </div>
+            </div>
+
+            <h3>Performance Optimizations Applied</h3>
+            <div class="success">
+                <ul>
+                    <li>✅ <strong>Lazy Data Loading</strong>: Prevents startup blocking, faster pod initialization</li>
+                    <li>✅ <strong>Reduced Search Results</strong>: 2 instead of 3 chunks for faster processing</li>
+                    <li>✅ <strong>Context Length Optimization</strong>: 1500 characters maximum for speed</li>
+                    <li>✅ <strong>Response Token Limiting</strong>: 150 tokens maximum for concise answers</li>
+                    <li>✅ <strong>Debug Print Removal</strong>: Production-ready logging for performance</li>
+                    <li>✅ <strong>External ChromaDB</strong>: Persistent storage with StatefulSet</li>
+                    <li>✅ <strong>Service Dependencies</strong>: Init containers ensure proper startup order</li>
+                </ul>
+            </div>
+
+            <h3>Technology Stack Summary</h3>
+            <div class="code">
+Frontend:     HTML5, CSS3, Flask Templates
+Backend:      Python 3.x, Flask 3.0.0
+Vector DB:    ChromaDB 0.4.24 (HTTP Client)
+Embeddings:   Sentence Transformers 2.7.0
+LLM:          Ollama llama3.2:1b (1B parameters)
+Orchestration: Kubernetes (Deployments, StatefulSets, Services)
+Storage:      Persistent Volumes, ConfigMaps, Secrets
+Monitoring:   Health Checks, Debug Endpoints, Logging
+            </div>
+
+            <div style="margin-top: 50px; text-align: center; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+                <h3>🎯 Next Steps for Enhancement</h3>
+                <p><strong>Planned Improvements:</strong></p>
+                <ul style="text-align: left; display: inline-block;">
+                    <li>📚 <strong>Documentation</strong>: README.md, architecture diagrams, code comments</li>
+                    <li>⛵ <strong>Helm Chart</strong>: Parameterized deployment for multiple environments</li>
+                    <li>🚀 <strong>CI/CD Pipeline</strong>: GitHub Actions for automated builds and deployments</li>
+                    <li>🌟 <strong>Community Publishing</strong>: Open source release with contribution guidelines</li>
+                </ul>
+            </div>
+
+            <hr style="margin: 40px 0;">
+            <p style="text-align: center;"><em>Documentation generated automatically by Confluence AI Assistant</em></p>
+            <p style="text-align: center; color: #7f8c8d;">Last updated: Real-time system metrics</p>
+        </div>
+    </div>
+
+    <a href="/" class="back-link">← Back to Application</a>
+</body>
+</html>
