@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cnfl-scrap-ingress
+  annotations:
+    ``` depends on your ingress class - name make sure to use request time out to prevent timeouts ```
+    # cert-manager.io/cluster-issuer: "ca-issuer"
+    # projectcontour.io/request-timeout: "300s"
+    # projectcontour.io/response-timeout: "300s"
+    # projectcontour.io/idle-timeout: "300s"
+spec:
+  ingresClassName: ""
+  rules:
+  - host: <You domain/FQDN>
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cnfl-scrap-service
+            port:
+              number: "443 or 80" 
+  # tls:
+  # - hosts:
+  #   - <You domain/FQDN>
+  #   secretName: cnfl-scrap-tls
