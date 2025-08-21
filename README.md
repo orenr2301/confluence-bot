@@ -1,11 +1,10 @@
-# A few Intro Words
+## A Few Words About This Project
 
-**This project is a a learning project done due to my AI & LLM learning path to achive  MLOPS skills to my abillities as this area going to be at the hard front
-And i want to be there to be able to support and connect and do DevOps at the AI area which is MLOPS as well  
-The RAG code part was created via Copilot using Cluade Sonnaet 4 Model
-Eventually  did the wrapping and was able to fix and put logic and add crucial part that Copilot wasnt able to solve correctly
-At my role As DevOps engineer i was able to establish a full deployment and bring this app and project to live :) 
-I Only can say that i'v i learned alot during this process to become a better DevOps enigneer who is stepping into the MLOPS world** 
+**This project is a learning project done as part of my AI & LLM learning path to achieve MLOps skills and add them to my abilities. Since this area is going to be at the hard front, I want to be there to be able to support, connect, and do DevOps in the AI area, which is MLOps as well.**
+
+**The RAG code part was created via Copilot using Claude Sonnet 4 model. Eventually, I did the wrapping and was able to fix and put logic, and add crucial parts that Copilot wasn't able to solve correctly. In my role as a DevOps engineer, I was able to establish a full deployment and bring this app and project to life! :)** 
+
+**I can only say that I've learned a lot during this process to become a better DevOps engineer who is stepping into the MLOps world.**
 
 
 # Confluence bot
