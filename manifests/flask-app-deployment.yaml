@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama-flask
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cnfl-scrap-flask
+  template:
+    metadata:
+      labels:
+        app: cnfl-scrap-flask
+    spec:
+      initContainers:
+      - name: wait-for-services
+        image: busybox:1.35
+        command: 
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for Ollama service to be ready..."
+          until nc -z ollama-service 11434; do
+            echo "Ollama not ready yet, waiting 10 seconds..."
+            sleep 10
+          done
+          echo "Ollama service is ready!"
+          
+          echo "Waiting for ChromaDB service to be ready..."
+          until nc -z chromadb-service 8000; do
+            echo "ChromaDB not ready yet, waiting 10 seconds..."
+            sleep 10
+          done
+          echo "ChromaDB service is ready!"
+          
+          echo "All services are ready!"
+      containers:
+      - name: ollama-flask
+        image: cnfl-scrap-flask:latest
+        ports:
+        - containerPort: 5300
+        env:
+        - name: CONFLUENCE_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: confluence-secrets
+              key: api-token
+        - name: CONFLUENCE_BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: confluence-secrets
+              key: base-url
+        - name: CONFLUENCE_SPACE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: confluence-secrets
+              key: space-key
+        - name: CA_SSL
+          valueFrom:
+            secretKeyRef:
+              name: confluence-secrets
+              key: cacrt
+        - name: HF_HOME
+          value: "/app/.cache/huggingface"
+        - name: SENTENCE_TRANSFORMERS_HOME
+          value: "/app/.cache/sentence_transformers"
+        - name: VERIFY_SSL
+          value: "false"
+        - name: OLLAMA_HOST
+          value: "ollama-service:11434"
+        - name: CHROMADB_HOST
+          value: "chromadb-service:8000"
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+          limits:
+            cpu: "2000m"
+            memory: "4Gi"
+        volumeMounts:
+        - name: ca-ssl
+          mountPath: /etc/ssl/certs/corporate-ca.crt
+          subPath: corporate-ca.crt
+          readOnly: true
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5300
+          initialDelaySeconds: 120  # Wait 2 minutes for model download
+          periodSeconds: 15
+          timeoutSeconds: 10
+          failureThreshold: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5300
+          initialDelaySeconds: 180  # Wait 3 minutes before first check
+          periodSeconds: 60
+          timeoutSeconds: 15
+          failureThreshold: 3
+      volumes:
+      - name: ca-ssl
+        secret:
+          secretName: confluence-secrets
+          items:
+          - key: cacrt
+            path: corporate-ca.crt
