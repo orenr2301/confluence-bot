@@ -1,4 +1,4 @@
-# confluence-bot
+# A few Intro Words
 
 **This project is a a learning project done due to my AI & LLM learning path to achive  MLOPS skills to my abillities as this area going to be at the hard front
 And i want to be there to be able to support and connect and do DevOps at the AI area which is MLOPS as well  
@@ -7,6 +7,8 @@ Eventually  did the wrapping and was able to fix and put logic and add crucial p
 At my role As DevOps engineer i was able to establish a full deployment and bring this app and project to live :) 
 I Only can say that i'v i learned alot during this process to become a better DevOps enigneer who is stepping into the MLOPS world** 
 
+
+# Confluence bot
 A confluence microservice bot which is deployed over kubernetes. To question your confluence space offline wth ollama
 
 The RAG code PART was build via Copilot - 
