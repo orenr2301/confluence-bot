@@ -14,10 +14,12 @@ A confluence microservice bot which is deployed over kubernetes. To question you
 
 1. [Architecture](#architecture)
 2. [Prerequisites](#prerequisites)
-3. [Deployment Instructions](#deployment-instructions)
-4. [Kubernetes Resources Explained](#kubernetes-resources-explained)
-5. [API Routes & Usage](#api-routes--usage)
-6. [Troubleshooting & Tips](#troubleshooting--tips)
+3. [Deployment & Configuration](#deployment--configuration)
+4. [Deployment Instructions](#deployment-instructions)
+5. [Kubernetes Resources Explained](#kubernetes-resources-explained)
+6. [Browser Routes & Usage](#browser-routes--usage)
+7. [API Routes & Usage](#api-routes--usage)
+8. [Troubleshooting & Tips](#troubleshooting--tips)
 
 ---
 
@@ -26,6 +28,11 @@ A confluence microservice bot which is deployed over kubernetes. To question you
 - **Ollama Model Server**: Hosts and serves LLMs (e.g., Llama3) via a REST API.
 - **CNFL-Scrapper UI**: The user interface and API layer for interacting with the model.
 - **Persistent Storage**: Ensures downloaded models and chat history are retained across pod restarts.
+
+- **Flask App**: Provides the UI and API endpoints.
+- **Ollama**: Runs the LLM (e.g., Llama3) for answering questions.
+- **ChromaDB**: Stores vector embeddings of your Confluence pages for semantic search.
+- **Confluence**: Source of documentation, accessed via REST API.
 
 ---
 
@@ -36,6 +43,27 @@ A confluence microservice bot which is deployed over kubernetes. To question you
 - Sufficient resources (at least 12Gi RAM, 6 CPUs for Ollama)
 - [cert-manager](https://cert-manager.io/) if you plan to use TLS (optional)
 - (Optional) A storage class for persistent volumes
+
+---
+
+## Deployment & Configuration
+
+1. **Set Environment Variables**  
+   - `CONFLUENCE_BASE_URL`: Your Confluence instance URL. (Absorbed from secret)
+   - `CONFLUENCE_API_TOKEN`: API token for Confluence access.(Absorbed from secret)
+   - `CONFLUENCE_SPACE_KEY`: (Optional) Limit to a specific space. (Absorbed from secret)
+   - `CHROMADB_HOST`: Host:port for ChromaDB (default: `chromadb-service:8000`).
+   - `OLLAMA_HOST`: Host:port for Ollama (default: `ollama-service:11434`).
+   - `VERIFY_SSL`: Set to `true` or `false` for SSL verification.
+   - `CA_SSL`: The ssl certificate to use if using self signerd or corporate instance. (Absorbed from secret)
+
+2. **Deploy on Kubernetes**  
+   - Use the provided `ollama-deployment.yaml` and other manifests.
+   - Ensure persistent storage for models and embeddings.
+
+3. **Start the Flask App**  
+   - Run with `python app.py` or via your preferred WSGI server.
+   - Default port: `5300`.
 
 ---
 
@@ -107,7 +135,84 @@ A confluence microservice bot which is deployed over kubernetes. To question you
   Exposes the Ollama API on port 11434 within the cluster.
 
 ---
+## Browser Routes & Usage
 
+### `/`  
+**Main UI page**  
+- Ask questions about your Confluence documentation.
+- Enter your question and get an AI-generated answer based on your docs.
+
+---
+
+### `/debug`  
+**Debug information page**  
+- Shows ChromaDB status, Confluence config, and connection test results.
+- Useful for troubleshooting configuration and connectivity.
+
+---
+
+### `/refresh`  
+**Manual data refresh**  
+- Triggers a full fetch and embedding of all Confluence pages into ChromaDB.
+- Use after updating Confluence content or changing config.
+
+---
+
+### `/test-auth`  
+**Authentication test page**  
+- Tests different authentication methods to Confluence.
+- Helps debug token or permission issues.
+
+---
+
+### `/health`  
+**Health check endpoint**  
+- Returns a simple JSON status.
+- Used for readiness/liveness probes or to check if the app is running.
+
+---
+
+### `/spaces`  
+**List Confluence spaces**  
+- Shows all spaces your token can access.
+- Useful for verifying connectivity and permissions.
+
+---
+
+### `/debug-chromadb`  
+**ChromaDB debug page**  
+- Shows ChromaDB client type, collections, and counts.
+- Useful for diagnosing vector DB issues.
+
+---
+
+### `/test-fetch-strategy`  
+**Fetch strategy test**  
+- Tests the page fetching logic from Confluence (does not store data).
+- Shows page count, sample IDs, and a sample page.
+
+---
+
+### `/test-space`  
+**Test configured space**  
+- Checks if the configured space exists and fetches a sample of pages.
+- Shows space info and sample page titles/IDs.
+
+---
+
+### `/docs`  
+**Documentation page**  
+- Shows live metrics (number of chunks/pages) and explains the app’s architecture and usage.
+- Good starting point for new users or admins.
+
+---
+
+## API/Debug Routes
+
+- All debug/test routes return raw data in `<pre>` format for easy inspection.
+- The `/` and `/docs` routes are user-friendly HTML pages.
+
+---
 ## API Routes & Usage
 
 Below are the main API routes exposed by the Ollama server (and thus available to the CNFL-Scrapper UI):
@@ -210,12 +315,6 @@ Below are the main API routes exposed by the Ollama server (and thus available t
 
 - **Security**:  
   Consider enabling authentication or network policies to restrict access to the Ollama API in sensitive environments.
-
----
-
-## Contact & Support
-
-For questions, issues, or feature requests, please open an issue in the repository or contact the maintainers.
 
 ---
 
